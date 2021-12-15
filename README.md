@@ -14,3 +14,5 @@ DB에 유저의 정보를 저장하고 로그인을 하면 대기실에 입장�
 상대방과의 전적 또한 업데이트하여 볼 수 있습니다.
 
 간단하게 섯다게임을 즐겨보실 수 있습니다.
+
+Youtube 영상 주소: https://www.youtube.com/watch?v=ogWh8iW1JNk&t=9s
