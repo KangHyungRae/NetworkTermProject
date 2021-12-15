@@ -191,11 +191,21 @@ public class ServerThread implements Runnable {
 		for (int i = 0; i < roomArray.size(); i++) {
 			if (Integer.parseInt(rNum) == roomArray.get(i).getRoomNum()) {
 				// 방 객체가 있는 경우, 방에 사용자추가
-				roomArray.get(i).getUserArray().add(user);
 				// 사용자 객체에 방 추가
-				user.getRoomArray().add(roomArray.get(i));
-				echoMsg(roomArray.get(i), user.toString() + "님이 입장하셨습니다.");
-				userList(rNum);
+				if(roomArray.get(i).getUserArray().size()<2) {//2명미만 일경우
+					roomArray.get(i).getUserArray().add(user);
+					user.getRoomArray().add(roomArray.get(i));
+					echoMsg(roomArray.get(i), user.toString() + "님이 입장하셨습니다.");
+					userList(rNum);
+				}
+				else{
+					try {
+						user.getDos().writeUTF(User.FULLROOM);
+					}
+					catch (IOException e) {
+						e.printStackTrace();
+					}
+				}
 			}
 		}
 	}
@@ -293,25 +303,26 @@ public class ServerThread implements Runnable {
 		String str = "";
 		str = game(user, rnum);
 		int winner = Integer.parseInt(str)-1;
-		int Rnum = rnum+100;
+		int Rnum1 = roomArray.get(rnum).getRoomNum();
 
 
-			try {
-				if (winner == 0) {
-					DB.winRecord(roomArray.get(rnum).getUserArray().get(0).getNickName());//승리 전적
-					DB.loseRecord(roomArray.get(rnum).getUserArray().get(1).getNickName());//패배 전적
-					roomArray.get(rnum).getUserArray().get(0).getDos().writeUTF(User.GAMEWIN + "/" + Rnum + "/" + roomArray.get(rnum).getUserArray().get(0).Card[0] + "/" + roomArray.get(rnum).getUserArray().get(0).Card[1] + "/" + roomArray.get(rnum).getUserArray().get(1).Card[0] + "/" + roomArray.get(rnum).getUserArray().get(1).Card[1]+ "/" + roomArray.get(rnum).getUserArray().get(0).str);
-					roomArray.get(rnum).getUserArray().get(1).getDos().writeUTF(User.GAMELOSE + "/" + Rnum + "/" + roomArray.get(rnum).getUserArray().get(1).Card[0] + "/" + roomArray.get(rnum).getUserArray().get(1).Card[1] + "/" + roomArray.get(rnum).getUserArray().get(0).Card[0] + "/" + roomArray.get(rnum).getUserArray().get(0).Card[1]+ "/" + roomArray.get(rnum).getUserArray().get(0).str);
-				}
-				else if(winner == 1) {
-					DB.winRecord(roomArray.get(rnum).getUserArray().get(1).getNickName());//승리 전적
-					DB.loseRecord(roomArray.get(rnum).getUserArray().get(0).getNickName());//패배 전적
-					roomArray.get(rnum).getUserArray().get(0).getDos().writeUTF(User.GAMELOSE + "/" + Rnum + "/" + roomArray.get(rnum).getUserArray().get(0).Card[0] + "/" + roomArray.get(rnum).getUserArray().get(0).Card[1] + "/" + roomArray.get(rnum).getUserArray().get(1).Card[0] + "/" + roomArray.get(rnum).getUserArray().get(1).Card[1]+ "/" + roomArray.get(rnum).getUserArray().get(0).str);
-					roomArray.get(rnum).getUserArray().get(1).getDos().writeUTF(User.GAMEWIN + "/" + Rnum + "/" + roomArray.get(rnum).getUserArray().get(1).Card[0] + "/" + roomArray.get(rnum).getUserArray().get(1).Card[1] + "/" + roomArray.get(rnum).getUserArray().get(0).Card[0] + "/" + roomArray.get(rnum).getUserArray().get(0).Card[1]+ "/" + roomArray.get(rnum).getUserArray().get(0).str);
-				}
-			}catch (IOException e) {
-				e.printStackTrace();
+
+		try {
+			if (winner == 0) {
+				DB.winRecord(roomArray.get(rnum).getUserArray().get(0).getNickName());//승리 전적
+				DB.loseRecord(roomArray.get(rnum).getUserArray().get(1).getNickName());//패배 전적
+				roomArray.get(rnum).getUserArray().get(0).getDos().writeUTF(User.GAMEWIN + "/" + Rnum1 + "/" + roomArray.get(rnum).getUserArray().get(0).Card[0] + "/" + roomArray.get(rnum).getUserArray().get(0).Card[1] + "/" + roomArray.get(rnum).getUserArray().get(1).Card[0] + "/" + roomArray.get(rnum).getUserArray().get(1).Card[1]+ "/" + roomArray.get(rnum).getUserArray().get(0).str);
+				roomArray.get(rnum).getUserArray().get(1).getDos().writeUTF(User.GAMELOSE + "/" + Rnum1 + "/" + roomArray.get(rnum).getUserArray().get(1).Card[0] + "/" + roomArray.get(rnum).getUserArray().get(1).Card[1] + "/" + roomArray.get(rnum).getUserArray().get(0).Card[0] + "/" + roomArray.get(rnum).getUserArray().get(0).Card[1]+ "/" + roomArray.get(rnum).getUserArray().get(0).str);
 			}
+			else if(winner == 1) {
+				DB.winRecord(roomArray.get(rnum).getUserArray().get(1).getNickName());//승리 전적
+				DB.loseRecord(roomArray.get(rnum).getUserArray().get(0).getNickName());//패배 전적
+				roomArray.get(rnum).getUserArray().get(0).getDos().writeUTF(User.GAMELOSE + "/" + Rnum1 + "/" + roomArray.get(rnum).getUserArray().get(0).Card[0] + "/" + roomArray.get(rnum).getUserArray().get(0).Card[1] + "/" + roomArray.get(rnum).getUserArray().get(1).Card[0] + "/" + roomArray.get(rnum).getUserArray().get(1).Card[1]+ "/" + roomArray.get(rnum).getUserArray().get(0).str);
+				roomArray.get(rnum).getUserArray().get(1).getDos().writeUTF(User.GAMEWIN + "/" + Rnum1 + "/" + roomArray.get(rnum).getUserArray().get(1).Card[0] + "/" + roomArray.get(rnum).getUserArray().get(1).Card[1] + "/" + roomArray.get(rnum).getUserArray().get(0).Card[0] + "/" + roomArray.get(rnum).getUserArray().get(0).Card[1]+ "/" + roomArray.get(rnum).getUserArray().get(0).str);
+			}
+		}catch (IOException e) {
+			e.printStackTrace();
+		}
 
 		roomArray.get(rnum).getUserArray().get(0).setState(0);;
 		roomArray.get(rnum).getUserArray().get(1).setState(0);

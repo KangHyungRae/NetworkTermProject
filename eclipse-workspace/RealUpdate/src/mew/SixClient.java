@@ -195,7 +195,13 @@ public class SixClient implements Runnable {
 				msg = token.nextToken();
 				whisper(id, nick, msg);
 				break;
+			case User.FULLROOM:
+				FullRoom();
 		}
+	}
+
+	private void FullRoom(){
+		JOptionPane.showMessageDialog(null,"방이 다 찼습니다");
 	}
 
 	private void logout() {

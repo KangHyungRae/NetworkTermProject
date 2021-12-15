@@ -46,8 +46,9 @@ public class User {
 	public static final String GAMESTART = "GS"; // 게임시작
 	public static final String GAMEWIN = "GW"; // 게임승리
 	public static final String GAMELOSE = "GL"; // 게임시작
-	public static final String GETINFO = "GI"; // 게임시작
-	public static final String CHECKINFO = "CI"; // 게임시작
+	public static final String GETINFO = "GI"; // 검색얻기
+	public static final String CHECKINFO = "CI"; // 정보검색
+	public static final String FULLROOM = "FR"; // 방인원 다찾을시
 
 	User() {
 

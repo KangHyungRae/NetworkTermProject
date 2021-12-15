@@ -234,6 +234,9 @@ public class RoomUI extends JFrame {
 			// 채팅방에 메시지 보냄
 			client.getDos().writeUTF(
 					User.GAMESTART + "/" + room.getRoomNum());
+			client.getDos().writeUTF(
+					User.GETINFO + "/" + room.getRoomNum());
+			chatField.setText("");
 			chatField.setText("");
 		} catch (IOException e) {
 			e.printStackTrace();
